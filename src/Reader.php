@@ -267,23 +267,6 @@ class Reader
 
         $this->garbageCollect();
     }
-
-    /**
-     * @param  object  $import
-     */
-    public function beforeRead($import)
-    {
-        $this->raise(new BeforeRead($this, $import));
-    }
-
-    /**
-     * @param  object  $import
-     */
-    public function afterRead($import)
-    {
-        $this->raise(new AfterRead($this, $import));
-    }
-    
     
     /**
      * @return IReader
