@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\BeforeImport;
+use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeWriting;
 use Maatwebsite\Excel\Tests\Data\Stubs\ExportWithEvents;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -67,6 +68,12 @@ class RegistersEventListenersTest extends TestCase
 
         $event::$beforeImport = function ($event) use (&$eventsTriggered) {
             $this->assertInstanceOf(BeforeImport::class, $event);
+            $this->assertInstanceOf(Reader::class, $event->reader);
+            $eventsTriggered++;
+        };
+
+        $event::$afterImport = function ($event) use (&$eventsTriggered) {
+            $this->assertInstanceOf(AfterImport::class, $event);
             $this->assertInstanceOf(Reader::class, $event->reader);
             $eventsTriggered++;
         };
