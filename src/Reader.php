@@ -6,10 +6,12 @@ use Throwable;
 use InvalidArgumentException;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use Maatwebsite\Excel\Events\AfterImport;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeRead;  // New 
+use Maatwebsite\Excel\Events\AfterRead;   // New
 use Maatwebsite\Excel\Events\BeforeImport;
+use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\ImportFailed;
 use Maatwebsite\Excel\Files\TemporaryFile;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -211,15 +213,17 @@ class Reader
     public function loadSpreadsheet($import)
     {
         $this->sheetImports = $this->buildSheetImports($import);
-
+        
+        $this->beforeRead($import);  // New
+        
         $this->readSpreadsheet();
 
-        // When no multiple sheets, use the main import object
-        // for each loaded sheet in the spreadsheet
+        $this->afterRead($import);   // New
+        
         if (!$import instanceof WithMultipleSheets) {
             $this->sheetImports = array_fill(0, $this->spreadsheet->getSheetCount(), $import);
         }
-
+        
         $this->beforeImport($import);
     }
 
@@ -228,6 +232,22 @@ class Reader
         $this->spreadsheet = $this->reader->load(
             $this->currentFile->getLocalPath()
         );
+    }
+
+    /**
+     * @param  object  $import
+     */
+    public function beforeRead($import)
+    {
+        $this->raise(new BeforeRead($this, $import));
+    }
+
+    /**
+     * @param  object  $import
+     */
+    public function afterRead($import)
+    {
+        $this->raise(new AfterRead($this, $import));
     }
 
     /**
@@ -247,7 +267,7 @@ class Reader
 
         $this->garbageCollect();
     }
-
+    
     /**
      * @return IReader
      */

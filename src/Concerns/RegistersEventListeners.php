@@ -2,11 +2,13 @@
 
 namespace Maatwebsite\Excel\Concerns;
 
-use Maatwebsite\Excel\Events\AfterSheet;
-use Maatwebsite\Excel\Events\AfterImport;
-use Maatwebsite\Excel\Events\BeforeSheet;
+use Maatwebsite\Excel\Events\BeforeRead; // New
+use Maatwebsite\Excel\Events\AfterRead;  // New
 use Maatwebsite\Excel\Events\BeforeExport;
+use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeImport;
+use Maatwebsite\Excel\Events\BeforeSheet;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\ImportFailed;
 use Maatwebsite\Excel\Events\BeforeWriting;
 
@@ -46,7 +48,15 @@ trait RegistersEventListeners
         if (method_exists($this, 'afterSheet')) {
             $listeners[AfterSheet::class] = [static::class, 'afterSheet'];
         }
+        
+        if (method_exists($this, 'beforeRead')) {
+            $listeners[BeforeRead::class] = [static::class, 'beforeRead'];
+        }
 
-        return $listeners;
+        if (method_exists($this, 'afterRead')) {
+            $listeners[AfterRead::class] = [static::class, 'afterRead'];
+        }
+
+	return $listeners;
     }
 }
