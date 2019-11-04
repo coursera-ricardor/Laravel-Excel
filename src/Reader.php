@@ -8,8 +8,8 @@ use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeRead;
-use Maatwebsite\Excel\Events\AfterRead;
+use Maatwebsite\Excel\Events\BeforeRead;  // New 
+use Maatwebsite\Excel\Events\AfterRead;   // New
 use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\ImportFailed;
@@ -214,11 +214,11 @@ class Reader
     {
         $this->sheetImports = $this->buildSheetImports($import);
         
-        $this->beforeRead($import);
+        $this->beforeRead($import);  // New
         
         $this->readSpreadsheet();
 
-        $this->afterRead($import);
+        $this->afterRead($import);   // New
         
         if (!$import instanceof WithMultipleSheets) {
             $this->sheetImports = array_fill(0, $this->spreadsheet->getSheetCount(), $import);
