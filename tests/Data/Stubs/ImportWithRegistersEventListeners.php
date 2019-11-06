@@ -3,8 +3,8 @@
 namespace Maatwebsite\Excel\Tests\Data\Stubs;
 
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
+use Maatwebsite\Excel\Concerns\WithEvents;
 
 class ImportWithRegistersEventListeners implements WithEvents
 {
@@ -40,7 +40,7 @@ class ImportWithRegistersEventListeners implements WithEvents
      */
     public static $afterSheet;
 
-    // New
+    // New 
     public static function beforeRead()
     {
         (static::$beforeRead)(...func_get_args());

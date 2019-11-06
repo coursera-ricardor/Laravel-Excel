@@ -10,26 +10,25 @@ use Maatwebsite\Excel\Tests\TestCase;
 use Maatwebsite\Excel\Events\BeforeRead;     // New
 use Maatwebsite\Excel\Events\AfterRead;      // New
 use PhpOffice\PhpSpreadsheet\Reader\IReader; // New
-use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Events\AfterImport;
 use Maatwebsite\Excel\Events\BeforeSheet;
+use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Events\BeforeExport;
-use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Events\BeforeWriting;
+use Maatwebsite\Excel\Tests\Data\Stubs\BeforeExportListener;
 use Maatwebsite\Excel\Tests\Data\Stubs\CustomConcern;
+use Maatwebsite\Excel\Tests\Data\Stubs\CustomSheetConcern;
 use Maatwebsite\Excel\Tests\Data\Stubs\ExportWithEvents;
 use Maatwebsite\Excel\Tests\Data\Stubs\ImportWithEvents; // updated
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Maatwebsite\Excel\Tests\Data\Stubs\CustomSheetConcern;
-use Maatwebsite\Excel\Tests\Data\Stubs\BeforeExportListener;
 
 class WithEventsTest extends TestCase
 {
     /**
      * @test
      */
-
 	public function export_events_get_called()
     {
         $event = new ExportWithEvents();
@@ -59,9 +58,8 @@ class WithEventsTest extends TestCase
             $this->assertInstanceOf(Sheet::class, $event->getSheet());
             $eventsTriggered++;
         };
+
         $this->assertInstanceOf(BinaryFileResponse::class, $event->download('filename.xlsx'));
-        // $this->assertInstanceOf(BinaryFileResponse::class, $event->download('D:\Git_Projects\Laravel-Excel\tests\Data\Disks\Test\filename.xlsx'));
-        // $this->assertInstanceOf(BinaryFileResponse::class, $event->download('filename.xlsx'));
         $this->assertEquals(4, $eventsTriggered);
     }
 
@@ -113,10 +111,7 @@ class WithEventsTest extends TestCase
             $this->assertInstanceOf(Sheet::class, $event->getSheet());
             $eventsTriggered++;
         };
-		// dd(base_path());
-		// dd(storage_path());
-        // $event->import('D:\Git_Projects\Laravel-Excel\tests\Data\Disks\Local\import.xlsx');
-        // $event->import(storage_path('import.xlsx'));
+
         $event->import('import.xlsx');
         $this->assertEquals(6, $eventsTriggered);
     }
@@ -124,7 +119,6 @@ class WithEventsTest extends TestCase
     /**
      * @test
      */
-
     public function can_have_invokable_class_as_listener()
     {
         $event = new ExportWithEvents();
@@ -140,7 +134,6 @@ class WithEventsTest extends TestCase
     /**
      * @test
      */
-
     public function can_have_global_event_listeners()
     {
         $event = new class {
@@ -178,7 +171,6 @@ class WithEventsTest extends TestCase
     /**
      * @test
      */
-
     public function can_have_custom_concern_handlers()
     {
         // Add a custom concern handler for the given concern.
@@ -218,7 +210,6 @@ class WithEventsTest extends TestCase
     /**
      * @test
      */
-
     public function can_have_custom_sheet_concern_handlers()
     {
         // Add a custom concern handler for the given concern.
